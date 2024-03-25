@@ -1,0 +1,3 @@
+[submodule "tyche-redis"]
+	path = tyche-redis
+	url = git@github.com:epfl-dcsl/tyche-redis.git
