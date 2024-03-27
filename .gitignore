@@ -53,3 +53,5 @@ dkms.conf
 
 musl-build/*
 config.mak
+
+*.strace
