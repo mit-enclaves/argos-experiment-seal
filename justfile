@@ -9,10 +9,10 @@ clean:
     make -C tyche-redis clean
 
 build-musl:
-	cd tyche-musl && ./configure --prefix={{MUSL_INSTALL}} --exec-prefix={{MUSL_INSTALL}} --disable-shared
-	make -C tyche-musl/
+	cd tyche-musl && ./configure --prefix={{MUSL_INSTALL}} --exec-prefix={{MUSL_INSTALL}} --disable-shared --enable-debug
+	make -C tyche-musl/ -j `nproc`
 	make -C tyche-musl/ install
 
 build-redis-server:
-	make -C tyche-redis/ CC={{MUSL_GCC}} CFLAGS="-static -Os" LDFLAGS="-static" USE_JEMALLOC=no redis-server
+	make -C tyche-redis/ CC={{MUSL_GCC}} CFLAGS="-static -Os" LDFLAGS="-static" USE_JEMALLOC=no redis-server -j `nproc`
 
