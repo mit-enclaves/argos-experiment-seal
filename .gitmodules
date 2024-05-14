@@ -5,3 +5,6 @@
 [submodule "llvm-project"]
 	path = llvm-project
 	url = git@github.com:jdrean/llvm-project.git
+[submodule "SEAL"]
+	path = SEAL
+	url = git@github.com:jdrean/SEAL.git
