@@ -1,6 +1,4 @@
-export PATH="/home/drean/tyche-experiment-seal/musl-build/bin:$PATH"
+export MUSL_ROOT="/home/drean/tyche-experiment-seal/musl-build"
 
-export C_INCLUDE_PATH="/home/drean/tyche-experiment-seal/musl-build/include:$C_INCLUDE_PATH"
-export CPLUS_INCLUDE_PATH="/home/drean/tyche-experiment-seal/musl-build/include:$CPLUS_INCLUDE_PATH"
-
-export LIBRARY_PATH="/home/drean/tyche-experiment-seal/musl-build/lib:$LIBRARY_PATH"
+export CFLAGS="-nodefaultlibs --sysroot $MUSL_ROOT -isystem $MUSL_ROOT/include"
+export LDFLAGS="-nostdlib --sysroot $MUSL_ROOT -L $MUSL_ROOT/lib -lc"
