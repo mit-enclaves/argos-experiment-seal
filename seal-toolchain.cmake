@@ -8,7 +8,7 @@ set(CMAKE_CXX_COMPILER clang++)
 # Set the include paths
 set(CMAKE_C_FLAGS "-nostdinc -nodefaultlibs --sysroot=${CMAKE_SYSROOT} -isystem ${CMAKE_SYSROOT}/include/c++/v1 -isystem /usr/lib/llvm-14/lib/clang/14.0.0/include -isystem ${CMAKE_SYSROOT}/include ")
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -nostdinc++")
-set(CMAKE_EXE_LINKER_FLAGS "-nostdlib -static --sysroot=${CMAKE_SYSROOT} -L${CMAKE_SYSROOT}/lib -lc -lpthread -ldl -lm -lutil -lrt -lc++ -lc++abi")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_SYSROOT}/lib/crt1.o ${CMAKE_SYSROOT}/lib/crti.o ${CMAKE_SYSROOT}/lib/crtn.o -nostdlib -static --sysroot=${CMAKE_SYSROOT} -L${CMAKE_SYSROOT}/lib -lc++ -lc++abi -lm -lpthread -ldl -lutil -lrt -lc")
 
 #set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${CMAKE_SYSROOT}/lib/crt1.o ${CMAKE_SYSROOT}/lib/crti.o ${CMAKE_SYSROOT}/lib/crtn.o")
 

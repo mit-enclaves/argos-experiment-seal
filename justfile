@@ -28,7 +28,7 @@ build-libcxx:
   ninja -C {{LIBCXX_BUILD}} cxx cxxabi unwind install
 
 build-seal:
-  cmake -S SEAL -B {{SEAL_BUILD}} -DCMAKE_TOOLCHAIN_FILE="{{CUR_DIR}}/seal-toolchain.cmake" -DCMAKE_INSTALL_PREFIX={{ROOT}} -DSEAL_USE_INTRIN=OFF
+  cmake -S SEAL -B {{SEAL_BUILD}} -DCMAKE_TOOLCHAIN_FILE="{{CUR_DIR}}/seal-toolchain.cmake" -DCMAKE_INSTALL_PREFIX={{ROOT}} -DSEAL_USE_INTRIN=OFF -DSEAL_BUILD_EXAMPLES=ON
   cmake --build {{SEAL_BUILD}}
   cmake --install {{SEAL_BUILD}}
 
