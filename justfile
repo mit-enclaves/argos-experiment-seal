@@ -32,6 +32,9 @@ build-seal:
   cmake --build {{SEAL_BUILD}}
   cmake --install {{SEAL_BUILD}}
 
+objdump-seal:
+  objdump -x {{SEAL_BUILD}}/bin/sealexamples > objdump-seal.out
+   
 refresh:
   @rm -rf {{ROOT}}
   @rm -rf {{CLANG_BUILD}}
