@@ -20,7 +20,7 @@ build-clang:
 
 build-musl:
   cd tyche-musl && ./configure --prefix={{ROOT}} --exec-prefix={{ROOT}} --disable-shared --enable-debug
-  make -C tyche-musl/ -j `nproc` CFLAGS="-static -Os -Wl,-z,norelro"
+  make -C tyche-musl/ -j `nproc` CFLAGS="-static -g3 -ggdb3 -O0 -Wl,-z,norelro"
   make -C tyche-musl/ install
 
 build-libcxx:

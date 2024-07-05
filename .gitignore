@@ -56,3 +56,4 @@ config.mak
 toolchain-root
 
 *.strace
+.vscode
