@@ -1,6 +1,10 @@
 set(CMAKE_SYSTEM_NAME Linux)
 set(CMAKE_SYSTEM_VERSION 1)
-set(CMAKE_SYSROOT /home/drean/tyche-experiment-seal/toolchain-root)
+
+get_filename_component(TOOLCHAIN_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+set(TOOLCHAIN_ROOT "${TOOLCHAIN_DIR}/toolchain-root")
+
+set(CMAKE_SYSROOT ${TOOLCHAIN_ROOT})
 
 set(CMAKE_C_COMPILER clang)
 set(CMAKE_CXX_COMPILER clang++)
