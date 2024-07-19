@@ -24,13 +24,16 @@ build-musl:
   make -C tyche-musl/ install
 
 build-libcxx:
-  cd llvm-project && cmake -G Ninja -S runtimes -B {{LIBCXX_BUILD}} -DLLVM_ENABLE_RUNTIMES="libcxx;libcxxabi;libunwind" -DCMAKE_TOOLCHAIN_FILE="{{CUR_DIR}}/llvm-toolchain.cmake" -DCMAKE_INSTALL_PREFIX="{{ROOT}}" -DLIBCXXABI_USE_LLVM_UNWINDER=ON -DLIBCXX_HAS_MUSL_LIBC=ON -DLIBCXX_ENABLE_LOCALIZATION=ON -DLIBCXX_ENABLE_SHARED=OFF -DLIBCXX_ENABLE_EXPERIMENTAL_LIBRARY=OFF -DLIBCXXABI_ENABLE_STATIC_UNWINDER=ON -DLIBCXXABI_ENABLE_SHARED=OFF -DLIBUNWIND_ENABLE_SHARED=OFF
+  cd llvm-project && cmake -G Ninja -S runtimes -B {{LIBCXX_BUILD}} -DLLVM_ENABLE_RUNTIMES="libcxx;libcxxabi;libunwind" -DCMAKE_TOOLCHAIN_FILE="{{CUR_DIR}}/llvm-toolchain.cmake" -DCMAKE_INSTALL_PREFIX="{{ROOT}}" -DLIBCXXABI_USE_LLVM_UNWINDER=ON -DLIBCXX_HAS_MUSL_LIBC=ON -DLIBCXX_ENABLE_LOCALIZATION=ON -DLIBCXX_ENABLE_SHARED=OFF -DLIBCXX_ENABLE_EXPERIMENTAL_LIBRARY=OFF -DLIBCXXABI_ENABLE_STATIC_UNWINDER=ON -DLIBCXXABI_ENABLE_SHARED=OFF -DLIBUNWIND_ENABLE_SHARED=OFF -DLIBUNWIND_ENABLE_STATIC=ON -DLIBUNWIND_IS_BAREMETAL=ON 
   ninja -C {{LIBCXX_BUILD}} -j `nproc` cxx cxxabi unwind install
 
 build-seal:
   cmake -S SEAL -B {{SEAL_BUILD}} -DCMAKE_TOOLCHAIN_FILE="{{CUR_DIR}}/seal-toolchain.cmake" -DCMAKE_INSTALL_PREFIX={{ROOT}} -DSEAL_USE_INTRIN=OFF -DSEAL_BUILD_EXAMPLES=ON
   cmake --build {{SEAL_BUILD}} --parallel
   cmake --install {{SEAL_BUILD}}
+
+clean-seal:
+  @rm -rf {{SEAL_BUILD}}
 
 objdump-seal:
   objdump -x {{SEAL_BUILD}}/bin/sealexamples > objdump-seal.out
@@ -43,6 +46,10 @@ refresh:
   @just clean
   @just build-musl
   @just build-libcxx
+  @just build-seal
+
+refresh-seal:
+  @just clean-seal
   @just build-seal
 
 ref:
