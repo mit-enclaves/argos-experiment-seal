@@ -57,3 +57,6 @@ toolchain-root
 
 *.strace
 .vscode
+*.out
+*.txt
+*.tmp
