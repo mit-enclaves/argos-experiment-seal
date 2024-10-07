@@ -10,9 +10,9 @@ set(CMAKE_C_COMPILER clang)
 set(CMAKE_CXX_COMPILER clang++)
 
 # Set the include paths
-set(CMAKE_C_FLAGS "-O0 -g3 -ggdb3 -nostdinc -nodefaultlibs --sysroot=${CMAKE_SYSROOT} -isystem ${CMAKE_SYSROOT}/include/c++/v1 -isystem /usr/lib/llvm-14/lib/clang/14.0.0/include -isystem ${CMAKE_SYSROOT}/include")
-set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -nostdinc++")
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_SYSROOT}/lib/crt1.o ${CMAKE_SYSROOT}/lib/crti.o ${CMAKE_SYSROOT}/lib/crtn.o -nostdlib -static -lc -z norelro --sysroot=${CMAKE_SYSROOT} -L${CMAKE_SYSROOT}/lib -lc++ -lc++abi -lm -lpthread -ldl -lutil -lrt -lc")
+set(CMAKE_C_FLAGS "-O0 -g3 -ggdb3 -nodefaultlibs --sysroot=${CMAKE_SYSROOT} -isystem ${CMAKE_SYSROOT}/include/c++/v1 -isystem ${CMAKE_SYSROOT}/include")
+set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS}")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_SYSROOT}/lib/crt1.o ${CMAKE_SYSROOT}/lib/crti.o -nostdlib -static -z norelro --sysroot=${CMAKE_SYSROOT} -L${CMAKE_SYSROOT}/lib -lc++ -lc++abi -lm -lpthread -ldl -lutil -lrt -lc ${CMAKE_SYSROOT}/lib/crtn.o") # -lc++ -lc++abi -lm -lpthread -ldl -lutil -lrt -lc")
 
 #set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${CMAKE_SYSROOT}/lib/crt1.o ${CMAKE_SYSROOT}/lib/crti.o ${CMAKE_SYSROOT}/lib/crtn.o")
 
