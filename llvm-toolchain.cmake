@@ -1,5 +1,5 @@
-set(CMAKE_SYSTEM_NAME Linux)
-set(CMAKE_SYSTEM_VERSION 1)
+# set(CMAKE_SYSTEM_NAME Linux)
+# set(CMAKE_SYSTEM_VERSION 1)
 
 get_filename_component(TOOLCHAIN_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
 set(TOOLCHAIN_ROOT "${TOOLCHAIN_DIR}/toolchain-root")
@@ -10,7 +10,7 @@ set(CMAKE_C_COMPILER clang)
 set(CMAKE_CXX_COMPILER clang++)
 
 # Set the include paths
-set(CMAKE_C_FLAGS "-O0 -g3 -ggdb3 -nostdinc -nodefaultlibs --sysroot=${CMAKE_SYSROOT} -isystem ${CMAKE_SYSROOT}/include -isystem /usr/include -isystem /usr/include/x86_64-linux-gnu -isystem /usr/include/linux")
+set(CMAKE_C_FLAGS "-O3 -nostdinc -nodefaultlibs --sysroot=${CMAKE_SYSROOT} -isystem ${CMAKE_SYSROOT}/include")
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -nostdinc++")
 set(CMAKE_EXE_LINKER_FLAGS "-static -lc -z norelro -nostdlib --sysroot=${CMAKE_SYSROOT} -L${CMAKE_SYSROOT}/lib")
 

@@ -17,11 +17,11 @@ setup-musl:
   cd {{MUSL_DIR}} && ./configure --prefix={{ROOT}} --exec-prefix={{ROOT}} --disable-shared --enable-debug
 
 build-musl:
-  make -C {{MUSL_DIR}}/ -j `nproc` CFLAGS="-static -g3 -ggdb3 -O0 -Wl,-z,norelro"
+  make -C {{MUSL_DIR}}/ -j `nproc` CFLAGS="-static -O3 -Wl,-z,norelro"
   make -C {{MUSL_DIR}}/ install
 
 build-musl-no-tyche:
-  make -C {{MUSL_DIR}}/ -j `nproc` CFLAGS="-static -D RUN_WITHOUT_TYCHE -g3 -ggdb3 -O0 -Wl,-z,norelro"
+  make -C {{MUSL_DIR}}/ -j `nproc` CFLAGS="-static -D RUN_WITHOUT_TYCHE -O3 -Wl,-z,norelro"
   make -C {{MUSL_DIR}}/ install
 
 clean-musl:
@@ -38,7 +38,20 @@ refresh-musl-no-tyche:
   @just build-musl-no-tyche
 
 setup-libcxx:
-  cd llvm-project && cmake -G Ninja -S runtimes -B {{LIBCXX_BUILD}} -DLLVM_ENABLE_RUNTIMES="libcxx;libcxxabi;libunwind" -DCMAKE_TOOLCHAIN_FILE="{{CUR_DIR}}/llvm-toolchain.cmake" -DCMAKE_INSTALL_PREFIX="{{ROOT}}" -DLIBCXXABI_USE_LLVM_UNWINDER=ON -DLIBCXX_HAS_MUSL_LIBC=ON -DLIBCXX_ENABLE_LOCALIZATION=ON -DLIBCXX_ENABLE_SHARED=OFF -DLIBCXX_ENABLE_EXPERIMENTAL_LIBRARY=OFF -DLIBCXXABI_ENABLE_STATIC_UNWINDER=ON -DLIBCXXABI_ENABLE_SHARED=OFF -DLIBUNWIND_ENABLE_SHARED=OFF -DLIBUNWIND_ENABLE_STATIC=ON -DLIBUNWIND_IS_BAREMETAL=ON
+  cd llvm-project && cmake -G Ninja -S runtimes -B {{LIBCXX_BUILD}} \
+  -DLLVM_ENABLE_RUNTIMES="libcxx;libcxxabi;libunwind;" \
+  -DCMAKE_TOOLCHAIN_FILE="{{CUR_DIR}}/llvm-toolchain.cmake" \
+  -DCMAKE_INSTALL_PREFIX="{{ROOT}}" \
+  -DLIBCXXABI_USE_LLVM_UNWINDER=ON \
+  -DLIBCXX_HAS_MUSL_LIBC=ON \
+  -DLIBCXX_ENABLE_LOCALIZATION=ON \
+  -DLIBCXX_ENABLE_SHARED=OFF \
+  -DLIBCXX_ENABLE_EXPERIMENTAL_LIBRARY=OFF \
+  -DLIBCXXABI_ENABLE_STATIC_UNWINDER=ON \
+  -DLIBCXXABI_ENABLE_SHARED=OFF \
+  -DLIBUNWIND_ENABLE_SHARED=OFF \
+  -DLIBUNWIND_ENABLE_STATIC=ON \
+  -DLIBUNWIND_IS_BAREMETAL=ON \
 
 build-libcxx:
   ninja -C {{LIBCXX_BUILD}} -j `nproc` cxx cxxabi unwind install
@@ -52,7 +65,7 @@ refresh-libcxx:
   @just build-libcxx
 
 setup-seal:
-  cmake -S SEAL -B {{SEAL_BUILD}} -DCMAKE_TOOLCHAIN_FILE="{{CUR_DIR}}/seal-toolchain.cmake" -DCMAKE_INSTALL_PREFIX={{ROOT}} -DSEAL_USE_INTRIN=OFF -DSEAL_BUILD_EXAMPLES=ON
+  cmake -S SEAL -B {{SEAL_BUILD}} -DCMAKE_TOOLCHAIN_FILE="{{CUR_DIR}}/seal-toolchain.cmake" -DCMAKE_INSTALL_PREFIX={{ROOT}} -DSEAL_USE_INTRIN=ON -DSEAL_USE_INTEL_HEXL=ON -DSEAL_BUILD_EXAMPLES=ON
 
 build-seal:
   cmake --build {{SEAL_BUILD}} --parallel $(nproc)
@@ -116,6 +129,7 @@ refresh:
   @just refresh-musl
   @just refresh-libcxx
   @just refresh-seal
+  @just refresh-seal-pir
 
 refresh-no-tyche:
   @rm -rf {{ROOT}}
