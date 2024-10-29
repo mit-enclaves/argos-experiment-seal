@@ -11,3 +11,6 @@
 [submodule "SealPIR"]
 	path = SealPIR
 	url = git@github.com:microsoft/SealPIR.git
+[submodule "APSI"]
+	path = APSI
+	url = git@github.com:jdrean/APSI.git
