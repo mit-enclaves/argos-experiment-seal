@@ -12,6 +12,10 @@ LIBCXX_BUILD := justfile_directory() + "/llvm-project/build-libcxx"
 SEAL_BUILD := justfile_directory() + "/SEAL/build"
 SEAL_BENCH_BUILD := justfile_directory() + "/SEAL/native/bench/build"
 SEAL_PIR_BUILD := justfile_directory() + "/SealPIR/build"
+SEAL_APSI_BUILD := justfile_directory() + "/APSI/build"
+KUKU_BUILD := justfile_directory() + "/Kuku/build"
+FLATBUFFERS_BUILD := justfile_directory() + "/flatbuffers/build"
+JSONCPP_BUILD := justfile_directory() + "/jsoncpp/build"
 
 setup-musl:
   cd {{MUSL_DIR}} && ./configure --prefix={{ROOT}} --exec-prefix={{ROOT}} --disable-shared --enable-debug
@@ -65,7 +69,7 @@ refresh-libcxx:
   @just build-libcxx
 
 setup-seal:
-  cmake -S SEAL -B {{SEAL_BUILD}} -DCMAKE_TOOLCHAIN_FILE="{{CUR_DIR}}/seal-toolchain.cmake" -DCMAKE_INSTALL_PREFIX={{ROOT}} -DSEAL_USE_INTRIN=ON -DSEAL_USE_INTEL_HEXL=ON -DSEAL_BUILD_EXAMPLES=ON
+  cmake -S SEAL -B {{SEAL_BUILD}} -DCMAKE_TOOLCHAIN_FILE="{{CUR_DIR}}/seal-toolchain.cmake" -DCMAKE_INSTALL_PREFIX={{ROOT}} -DSEAL_USE_INTRIN=ON -DSEAL_USE_INTEL_HEXL=ON -DSEAL_BUILD_EXAMPLES=ON -DSEAL_THROW_ON_TRANSPARENT_CIPHERTEXT=OFF
 
 build-seal:
   cmake --build {{SEAL_BUILD}} --parallel $(nproc)
@@ -80,6 +84,42 @@ build-seal-pir:
   cmake -S SealPIR -B {{SEAL_PIR_BUILD}} -DCMAKE_TOOLCHAIN_FILE="{{CUR_DIR}}/seal-toolchain.cmake" -DCMAKE_INSTALL_PREFIX={{ROOT}} -DSEAL_ROOT={{ROOT}} -DCMAKE_THREAD_LIBS_INIT="-lpthread"
   make -C {{SEAL_PIR_BUILD}} -j `nproc`
 
+build-kuku:
+  cmake -S Kuku -B {{KUKU_BUILD}} -DCMAKE_TOOLCHAIN_FILE="{{CUR_DIR}}/seal-toolchain.cmake" -DCMAKE_INSTALL_PREFIX={{ROOT}} -DSEAL_ROOT={{ROOT}} -DCMAKE_THREAD_LIBS_INIT="-lpthread"
+  cmake --build {{KUKU_BUILD}} --parallel $(nproc)
+  cmake --install {{KUKU_BUILD}}
+
+build-flatbuffers:
+  cmake -S flatbuffers -B {{FLATBUFFERS_BUILD}} -DCMAKE_TOOLCHAIN_FILE="{{CUR_DIR}}/seal-toolchain.cmake" -DCMAKE_INSTALL_PREFIX={{ROOT}} -DCMAKE_THREAD_LIBS_INIT="-lpthread"
+  make -C {{FLATBUFFERS_BUILD}} -j `nproc`
+  make -C {{FLATBUFFERS_BUILD}} install
+
+build-jsoncpp:
+  cmake -S jsoncpp -B {{JSONCPP_BUILD}} \
+    -DCMAKE_TOOLCHAIN_FILE="{{CUR_DIR}}/seal-toolchain.cmake" \
+    -DCMAKE_INSTALL_PREFIX={{ROOT}} \
+    -DBUILD_SHARED_LIBS=OFF \
+    -DBUILD_STATIC_LIBS=ON \
+    -DJSONCPP_WITH_TESTS=OFF \
+    -DJSONCPP_WITH_POST_BUILD_UNITTEST=OFF \
+    -DJSONCPP_WITH_EXAMPLE=OFF
+  cmake --build {{JSONCPP_BUILD}} --parallel $(nproc)
+  cmake --install {{JSONCPP_BUILD}}
+
+build-seal-apsi:
+  @just build-kuku
+  @just build-jsoncpp
+  cmake -S APSI -B {{SEAL_APSI_BUILD}} \
+    -DCMAKE_TOOLCHAIN_FILE="{{CUR_DIR}}/seal-toolchain.cmake" \
+    -DCMAKE_INSTALL_PREFIX={{ROOT}} \
+    -DSEAL_ROOT={{ROOT}} \
+    -DCMAKE_THREAD_LIBS_INIT="-lpthread" \
+    -DAPSI_BUILD_TESTS=ON \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DAPSI_USE_LOG4CPLUS=OFF \
+    -DAPSI_USE_ZMQ=OFF
+  make -C {{SEAL_APSI_BUILD}} -j `nproc`
+
 clean-seal:
   @rm -rf {{SEAL_BUILD}}
 
@@ -88,6 +128,21 @@ clean-seal-bench:
 
 clean-seal-pir:
   @rm -rf {{SEAL_PIR_BUILD}}
+
+clean-kuku:
+  @rm -rf {{KUKU_BUILD}}
+
+clean-jsoncpp:
+  @rm -rf {{JSONCPP_BUILD}}
+
+clean-flatbuffers:
+  @rm -rf {{FLATBUFFERS_BUILD}}
+
+clean-seal-apsi:
+  @just clean-kuku
+  @just clean-jsoncpp
+  @just clean-flatbuffers
+  @rm -rf {{SEAL_APSI_BUILD}}
 
 refresh-seal:
   @just clean-seal
@@ -101,6 +156,10 @@ refresh-seal-bench:
 refresh-seal-pir:
   @just clean-seal-pir
   @just build-seal-pir
+
+refresh-seal-apsi:
+  @just clean-seal-apsi
+  @just build-seal-apsi
 
 objdump-seal:
   objdump -x {{SEAL_BUILD}}/bin/sealexamples > objdump-seal.out
@@ -136,17 +195,20 @@ refresh-no-tyche:
   @just refresh-musl-no-tyche
   @just refresh-libcxx
   @just refresh-seal
-
+  @just refresh-seal-pir
+  
 refresh-light:
   @touch {{MUSL_DIR}}/src/internal/tyche.c
   @touch {{MUSL_DIR}}/src/internal/tyche_alloc.c
   @touch {{SEAL_BUILD}}/native/examples/CMakeFiles/sealexamples.dir/examples.cpp.o
   @touch {{SEAL_BENCH_BUILD}}/CMakeFiles/sealbench.dir/bench.cpp.o
   @touch {{SEAL_PIR_BUILD}}/src/CMakeFiles/main.dir/main.cpp.o
+  @touch {{SEAL_APSI_BUILD}}/CMakeFiles/integration_tests.dir/tests/integration/src/integration_tests_runner.cpp.o
   @just build-musl
   @just build-seal
   @just build-seal-bench
   @just build-seal-pir
+  @just build-seal-apsi
 
 refresh-no-tyche-light:
   @touch {{MUSL_DIR}}/src/internal/tyche.c
@@ -154,7 +216,9 @@ refresh-no-tyche-light:
   @touch {{SEAL_BUILD}}/native/examples/CMakeFiles/sealexamples.dir/examples.cpp.o
   @touch {{SEAL_BENCH_BUILD}}/CMakeFiles/sealbench.dir/bench.cpp.o
   @touch {{SEAL_PIR_BUILD}}/src/CMakeFiles/main.dir/main.cpp.o
+  @touch {{SEAL_APSI_BUILD}}/CMakeFiles/integration_tests.dir/tests/integration/src/integration_tests_runner.cpp.o
   @just build-musl-no-tyche
   @just build-seal
   @just build-seal-bench
   @just build-seal-pir
+  @just build-seal-apsi

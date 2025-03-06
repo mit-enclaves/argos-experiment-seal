@@ -4,7 +4,7 @@
 	branch = tyche_dev
 [submodule "SEAL"]
 	path = SEAL
-	url = git@github.com:jdrean/SEAL.git
+	url = git@github.com:mit-enclaves/SEAL.git
 [submodule "llvm-project"]
 	path = llvm-project
 	url = git@github.com:jdrean/llvm-project.git
@@ -14,3 +14,12 @@
 [submodule "APSI"]
 	path = APSI
 	url = git@github.com:jdrean/APSI.git
+[submodule "flatbuffers"]
+	path = flatbuffers
+	url = https://github.com/google/flatbuffers
+[submodule "Kuku"]
+	path = Kuku
+	url = https://github.com/microsoft/Kuku
+[submodule "jsoncpp"]
+	path = jsoncpp
+	url = https://github.com/open-source-parsers/jsoncpp
