@@ -1,5 +1,7 @@
-# tyche-experiment-seal
-Setup to run a series of FHE-based applications using Microsoft SEAL libraries on top of Argos (fork of Tyche).
+# Argos Experiment SEAL
+Setup to run a series of FHE-based applications using Microsoft SEAL libraries on top of [Argos](https://github.com/mit-enclaves/argos) (fork of [Tyche](https://github.com/epfl-dcsl/tyche-devel)).
+
+This repository is based on the [`tyche-experiment-redis`](https://github.com/epfl-dcsl/tyche-experiment-redis) repository.
 
 ## Initialise The Repository
 
