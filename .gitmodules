@@ -10,7 +10,7 @@
 	url = git@github.com:jdrean/llvm-project.git
 [submodule "SealPIR"]
 	path = SealPIR
-	url = git@github.com:microsoft/SealPIR.git
+	url = git@github.com:mit-enclaves/SealPIR.git
 [submodule "APSI"]
 	path = APSI
 	url = git@github.com:jdrean/APSI.git
