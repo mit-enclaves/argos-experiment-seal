@@ -171,31 +171,44 @@ all:
   @just build-libcxx
   @just setup-seal
   @just build-seal
+  @just build-seal-bench
+  @just build-seal-pir
+  @just build-seal-apsi
 
 build:
   @just build-musl
   @just build-libcxx
   @just build-seal
+  @just build-seal-bench
+  @just build-seal-pir
+  @just build-seal-apsi
 
 clean:
   @rm -rf {{ROOT}}
   @just clean-musl
   @just clean-libcxx
   @just clean-seal
+  @just clean-seal-bench
+  @just clean-seal-pir
+  @just clean-seal-apsi
    
 refresh:
   @rm -rf {{ROOT}}
   @just refresh-musl
   @just refresh-libcxx
   @just refresh-seal
+  @just refresh-seal-bench
   @just refresh-seal-pir
+  @just refresh-seal-apsi
 
 refresh-no-tyche:
   @rm -rf {{ROOT}}
   @just refresh-musl-no-tyche
   @just refresh-libcxx
   @just refresh-seal
+  @just refresh-seal-bench
   @just refresh-seal-pir
+  @just refresh-seal-apsi
   
 refresh-light:
   @touch {{MUSL_DIR}}/src/internal/tyche.c
