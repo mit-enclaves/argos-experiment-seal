@@ -1,19 +1,19 @@
 [submodule "tyche-musl"]
 	path = tyche-musl
-	url = git@github.com:jdrean/tyche-musl.git
+	url = https://github.com/jdrean/tyche-musl
 	branch = tyche_dev
 [submodule "SEAL"]
 	path = SEAL
-	url = git@github.com:mit-enclaves/SEAL.git
+	url = https://github.com/mit-enclaves/SEAL
 [submodule "llvm-project"]
 	path = llvm-project
-	url = git@github.com:jdrean/llvm-project.git
+	url = https://github.com/jdrean/llvm-project
 [submodule "SealPIR"]
 	path = SealPIR
-	url = git@github.com:mit-enclaves/SealPIR.git
+	url = https://github.com/mit-enclaves/SealPIR
 [submodule "APSI"]
 	path = APSI
-	url = git@github.com:jdrean/APSI.git
+	url = https://github.com/jdrean/APSI
 [submodule "flatbuffers"]
 	path = flatbuffers
 	url = https://github.com/google/flatbuffers
