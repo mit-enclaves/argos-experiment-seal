@@ -90,9 +90,9 @@ build-kuku:
   cmake --install {{KUKU_BUILD}}
 
 build-flatbuffers:
-  cmake -S flatbuffers -B {{FLATBUFFERS_BUILD}} -DCMAKE_TOOLCHAIN_FILE="{{CUR_DIR}}/seal-toolchain.cmake" -DCMAKE_INSTALL_PREFIX={{ROOT}} -DCMAKE_THREAD_LIBS_INIT="-lpthread"
+  cmake -S flatbuffers -B {{FLATBUFFERS_BUILD}} -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
   make -C {{FLATBUFFERS_BUILD}} -j `nproc`
-  make -C {{FLATBUFFERS_BUILD}} install
+  sudo make -C {{FLATBUFFERS_BUILD}} install
 
 build-jsoncpp:
   cmake -S jsoncpp -B {{JSONCPP_BUILD}} \
@@ -107,6 +107,7 @@ build-jsoncpp:
   cmake --install {{JSONCPP_BUILD}}
 
 build-seal-apsi:
+  @just build-flatbuffers
   @just build-kuku
   @just build-jsoncpp
   cmake -S APSI -B {{SEAL_APSI_BUILD}} \
